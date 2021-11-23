@@ -68,7 +68,7 @@ class GlobalPlanner:
         self.plan_goal = msg
         self.plan_gx = msg.pose.position.x
         self.plan_gy = msg.pose.position.y
-        print("get new goal!!! ",self.plan_goal)
+        #print("get new goal!!! ",self.plan_goal)
         self.replan(0)
         pass
 

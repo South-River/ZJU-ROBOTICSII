@@ -125,15 +125,31 @@ class PathPlanner:
 
     def calc_final_path(self, ngoal, closedset):
         # generate final course
-        rx, ry = [self.calc_grid_position(ngoal.x, self.minx)], [
-            self.calc_grid_position(ngoal.y, self.miny)]
+        rx_idx, ry_idx = [ngoal.x], [ngoal.y]
         pind = ngoal.pind
         while pind != -1:
             n = closedset[pind]
-            rx.append(self.calc_grid_position(n.x, self.minx))
-            ry.append(self.calc_grid_position(n.y, self.miny))
+            '''
+            if len(rx_idx) >= 3:
+                if (ry_idx[-1] - ry_idx[-2]) != 0 and (n.y - ry_idx[-1]) != 0:
+                    if (rx_idx[-1] - rx_idx[-2]) / (ry_idx[-1] - ry_idx[-2]) == (n.x - rx_idx[-1]) / (n.y - ry_idx[-1]):
+                        rx_idx[-1] = n.x
+                        ry_idx[-1] = n.y
+                        pind = n.pind
+                        continue
+                if (ry_idx[-1] - ry_idx[-2]) == 0 and (n.y - ry_idx[-1]) == 0:
+                    rx_idx[-1] = n.x
+                    ry_idx[-1] = n.y
+                    pind = n.pind
+                    continue
+            '''  
+            rx_idx.append(n.x)
+            ry_idx.append(n.y)
             pind = n.pind
-
+        rx, ry = [], []
+        for idx in range(0,len(rx_idx)):
+            rx.append(self.calc_grid_position(rx_idx[idx],self.minx))
+            ry.append(self.calc_grid_position(ry_idx[idx],self.miny))
         return rx, ry
 
 

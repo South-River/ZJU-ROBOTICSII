@@ -15,7 +15,6 @@ from threading import Lock, Thread
 from pynput import keyboard
 import time
 
-
 def limitVal(minV, maxV, v):
     if v < minV:
         return minV
@@ -47,12 +46,9 @@ class LocalPlanner:
         self.path_sub = rospy.Subscriber('/course_agv/global_path', Path,
                                          self.pathCallback)
 
-        self.vel_pub = rospy.Publisher('/webService/cmd_vel',
+        self.vel_pub = rospy.Publisher('/course_agv/velocity',
                                        Twist,
                                        queue_size=1)
-        # self.vel_pub = rospy.Publisher('/course_agv/velocity',
-        #                                Twist,
-        #                                queue_size=1)
 
         # mid_goal pub
         self.midpose_pub = rospy.Publisher('/course_agv/mid_goal',
@@ -60,12 +56,10 @@ class LocalPlanner:
                                            queue_size=1)
 
         # get laser & update obstacle
-        # self.laser_sub = rospy.Subscriber('/scan_emma_nav_front', LaserScan,
-        #                                   self.laserCallback)
-        self.laser_sub = rospy.Subscriber('/scan', LaserScan,
+        self.laser_sub = rospy.Subscriber('/course_agv/laser/scan', LaserScan,
                                           self.laserCallback)
         self.planner_thread = None
-        self.listener = keyboard.Listener(on_press=self.on_press)
+        #self.listener = keyboard.Listener(on_press=self.on_press)
         # self.listener.start()
 
     def on_press(self, key):
@@ -90,9 +84,9 @@ class LocalPlanner:
     # self.goal_dis  (distance from the final goal)
     def updateGlobalPose(self):
         try:
-            self.tf.waitForTransform("/map", "/base_footprint", rospy.Time(),
+            self.tf.waitForTransform("/map", "/robot_base", rospy.Time(),
                                      rospy.Duration(4.0))
-            (self.trans, self.rot) = self.tf.lookupTransform('/map', '/base_footprint', rospy.Time(0))
+            (self.trans, self.rot) = self.tf.lookupTransform('/map', '/robot_base', rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException,
                 tf.ExtrapolationException):
             print("get tf error!")
@@ -114,7 +108,7 @@ class LocalPlanner:
         goal = self.path.poses[self.goal_index]
         self.midpose_pub.publish(goal)
         # lgoal = self.tf.transformPose("/base_footprint", goal)
-        lgoal = self.tf.transformPose("/base_footprint", goal)
+        lgoal = self.tf.transformPose("/robot_base", goal)
         self.plan_goal = np.array(
             [lgoal.pose.position.x, lgoal.pose.position.y])
         self.goal_dis = math.hypot(
@@ -123,7 +117,7 @@ class LocalPlanner:
 
     # get obstacle (in robot frame)
     def laserCallback(self, msg):
-        # print("get laser msg!!!!",msg)
+        print("get laser msg!!!!")
         self.laser_lock.acquire()
         # preprocess
         # print("i am here!")
@@ -146,7 +140,7 @@ class LocalPlanner:
 
     # get path & initPlaning
     def pathCallback(self, msg):
-        # print("get path msg!!!!!",msg)
+        print("get path msg!!!!!")
         self.path = msg
         self.lock.acquire()
         self.initPlanning()
@@ -175,11 +169,13 @@ class LocalPlanner:
         self.plan_x = np.array([0.0, 0.0, 0.0, self.vx, self.vw])
 
     def planThreadFunc(self):
-        print("running planning thread!!")
+        print("running planning thread!!")        
+        
         while True:
             self.lock.acquire()
             self.planOnce()
             self.lock.release()
+            
             if self.goal_dis < self.arrive:
                 print("arrive goal!")
                 print(self.goal_dis)
@@ -200,8 +196,9 @@ class LocalPlanner:
         self.plan_x = np.array([0.0, 0.0, 0.0, self.vx, self.vw])
         # Update obstacle
         self.updateObstacle()
+        #print( self.plan_ob)
         u = self.dwa.plan(self.plan_x, self.plan_goal, self.plan_ob)
-        alpha = 0.5
+        #alpha = 0.5
         # self.vx = u[0] * alpha + self.vx * (1 - alpha)
         # self.vw = u[1] * alpha + self.vw * (1 - alpha)
         self.vx = max(min(u[0], 0.2), -0.2)
