@@ -14,7 +14,7 @@ A*, i'm too lazy to code JPS again in python since A* can find correct path in 0
 
 DWA, since we have to limit our speed in 0.2m/s, it seems to be a waste of time to adjust parameters for a long time...
 
-TIPS: be sure that you had install GPU driver or maybe you can't get layser message. as a result, the car can't avoid obstacles.
+TIPS: be sure that you had install GPU driver or maybe you can't get laser message. as a result, the car can't avoid obstacles.
 
 ## Odometry
 
