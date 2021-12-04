@@ -18,6 +18,12 @@ TIPS: be sure that you had install GPU driver or maybe you can't get laser messa
 
 ## Odometry
 
-ICP, maybe i will use kd-tree to get faster if i can finish my oslab and robotics vision.
+ICP, TA requires to finish in python. 
+
+#### My Works
+- cKDTree being used to boost
+- linear interpolation being used to fill nan data
+- fit two straight lines to multiple points, and then calculate the sine of the straight line angle, so as to find the corner points to reduce the calculation time
+- (the work effect is not good) Match the current data with multi-frame lidar data to increase the amount of data, thereby improving accuracy
 
 ## waiting for complete...
