@@ -1,0 +1,20 @@
+<launch>
+
+	<node pkg="course_agv_ekf" type="odometry.py" name="icp" output="screen">
+
+		<!--from a rosbag-->
+		<param name="robot_x" value="0"/>
+		<param name="robot_y" value="0"/>
+		<param name="robot_theta" value="0"/>
+
+		<param name="max_iter" value="30"/>
+		<param name="tolerance" value="0"/>
+		<param name="dis_th" value="0.05"/>
+		<param name="corner_num" value="150"/>
+		<param name="past_frame_num" value='0'/>
+	</node>
+
+    <node pkg="course_agv_ekf" type="tf" name="my_tf"/>
+
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find course_agv_ekf)/launch/course_agv.rviz" />
+</launch>
