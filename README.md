@@ -1,5 +1,10 @@
 # ZJU-ROBOTICSII
 
+```cpp
+source devel/setup.bash
+roslaunch course_agv_nav nav.launch
+```
+
 some code, just for simulation.
 
 star this repo if you like it or can help you.
@@ -20,7 +25,13 @@ TIPS: be sure that you had install GPU driver or maybe you can't get laser messa
 
 ICP, TA requires to finish in python. 
 
-#### My Works
+```cpp
+source devel/setup.bash
+roslaunch course_agv_icp icp.launch
+(a new terminal) rosbag play (001/002/003).bag
+```
+
+### My Work
 - cKDTree being used to boost
 - linear interpolation being used to fill nan data
 - fit two straight lines to multiple points, and then calculate the sine of the straight line angle, so as to find the corner points to reduce the calculation time
