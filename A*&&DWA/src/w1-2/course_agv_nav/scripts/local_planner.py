@@ -117,7 +117,7 @@ class LocalPlanner:
 
     # get obstacle (in robot frame)
     def laserCallback(self, msg):
-        print("get laser msg!!!!")
+        #print("get laser msg!!!!")
         self.laser_lock.acquire()
         # preprocess
         # print("i am here!")

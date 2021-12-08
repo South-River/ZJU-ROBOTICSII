@@ -52,10 +52,7 @@ float getMax(vector<float> list)
     float max_val = -999999999999999;
     for(int i=0; i < list.size(); i++)
     {
-        if(max_val < list[i])
-        {
-            max_val = list[i];
-        }
+        max_val = (max_val < list[i])?list[i]:max_val;
     }
     return max_val;
 }
@@ -65,10 +62,7 @@ float getMin(vector<float> list)
     float min_val = 99999999999999;
     for(int i=0; i < list.size(); i++)
     {
-        if(min_val > list[i])
-        {
-            min_val = list[i];
-        }
+	min_val = (min_val > list[i])?list[i]:min_val;
     }
     return min_val;
 }
@@ -97,20 +91,20 @@ void genMap()
 
     for(int i = 0; i < obs_list[0].size(); i++)
     {
-        float xmin = obs_list[0][i] - robot_radius;
-        float ymin = obs_list[1][i] - robot_radius;
-        float xmax = obs_list[0][i] + robot_radius;
-        float ymax = obs_list[1][i] + robot_radius;
+        float obs_xmin = obs_list[0][i] - robot_radius;
+        float obs_ymin = obs_list[1][i] - robot_radius;
+        float obs_xmax = obs_list[0][i] + robot_radius;
+        float obs_ymax = obs_list[1][i] + robot_radius;
         
-        float xmin_idx = int((xmin - x_min) / grid_size);
-        float ymin_idx = int((ymin - y_min) / grid_size);
-        float xmax_idx = int((xmax - x_min) / grid_size);
-        float ymax_idx = int((ymax  - y_min) / grid_size);
+        float obs_xmin_idx = int((obs_xmin - x_min) / grid_size);
+        float obs_ymin_idx = int((obs_ymin - y_min) / grid_size);
+        float obs_xmax_idx = int((obs_xmax - x_min) / grid_size);
+        float obs_ymax_idx = int((obs_ymax  - y_min) / grid_size);
         //cout<<"xmin_idx"<<xmin_idx<<"ymin_idfx"<<ymin_idx<<endl;
-        for(int j = (xmin_idx >= 0?xmin_idx:0); j <= (xmax_idx < width-1?xmax_idx:width-1); j++)
+        for(int j = (obs_xmin_idx >= 0?obs_xmin_idx:0); j <= (obs_xmax_idx < width-1?obs_xmax_idx:width-1); j++)
         {
             //cout<<"j"<<j<<endl;
-            for(int k = (ymin_idx >=0 ?ymin_idx:0); k <= (ymax_idx < height-1?ymax_idx:height-1); k++)
+            for(int k = (obs_ymin_idx >=0 ?obs_ymin_idx:0); k <= (obs_ymax_idx < height-1?obs_ymax_idx:height-1); k++)
             {
                 //cout<<"k"<<k<<endl;
                 maps[j][k] = 1;
