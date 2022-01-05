@@ -37,4 +37,6 @@ roslaunch course_agv_icp icp.launch
 - fit two straight lines to multiple points, and then calculate the sine of the straight line angle, so as to find the corner points to reduce the calculation time
 - (the work effect is not good) Match the current data with multi-frame lidar data to increase the amount of data, thereby improving accuracy
 
-## waiting for complete...
+## Localization
+
+EKF
